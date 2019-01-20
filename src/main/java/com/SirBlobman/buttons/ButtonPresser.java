@@ -1,34 +1,14 @@
 package com.SirBlobman.buttons;
 
-import com.studiohartman.jamepad.ControllerIndex;
-import com.studiohartman.jamepad.ControllerManager;
-import com.studiohartman.jamepad.ControllerUnpluggedException;
-
 public class ButtonPresser {
-    private static ButtonPresserFrame PANEL;
     public static void main(String[] args) {
-        PANEL = new ButtonPresserFrame();
-        PANEL.setVisible(true);
-        checkControllers();
+        ButtonPresserFrame panel = new ButtonPresserFrame();        
+        panel.setVisible(true);
+        checkControllers(panel);
     }
     
-    public static void checkControllers() {
-        Runnable task = () -> {
-            final ControllerManager manager = new ControllerManager();
-            manager.initSDLGamepad();
-            
-            while(PANEL.isVisible()) {
-                try {
-                    ControllerIndex index = manager.getControllerIndex(0);
-                    String name = index.getName();
-                    System.out.println(name);
-                    PANEL.setControllerName(name);
-                } catch(ControllerUnpluggedException ex) {
-                    System.out.println("Disconnected Controller: " + 0);
-                }
-            }
-        };
-        
+    public static void checkControllers(ButtonPresserFrame panel) {
+        ControllerTask task = new ControllerTask(panel);
         Thread thread = new Thread(task);
         thread.start();
     }
